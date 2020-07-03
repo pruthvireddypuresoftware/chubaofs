@@ -43,12 +43,12 @@ func newMetaPartitionCmd(client *master.MasterClient) *cobra.Command {
 }
 
 const (
-	cmdMetaPartitionGetShort              = "Display detail information of a meta partition"
-	cmdCheckCorruptMetaPartitionShort     = "Check out corrupt meta partitions"
-	cmdMetaPartitionDecommissionShort     = "Decommission a replication of the meta partition to a new address"
-	cmdMetaPartitionReplicateShort        = "Add a replication of the meta partition on a new address"
-	cmdMetaPartitionDeleteReplicaShort    = "Delete a replication of the meta partition on a fixed address"
-	)
+	cmdMetaPartitionGetShort           = "Display detail information of a meta partition"
+	cmdCheckCorruptMetaPartitionShort  = "Check out corrupt meta partitions"
+	cmdMetaPartitionDecommissionShort  = "Decommission a replication of the meta partition to a new address"
+	cmdMetaPartitionReplicateShort     = "Add a replication of the meta partition on a new address"
+	cmdMetaPartitionDeleteReplicaShort = "Delete a replication of the meta partition on a fixed address"
+)
 
 func newMetaPartitionGetCmd(client *master.MasterClient) *cobra.Command {
 	var cmd = &cobra.Command{
@@ -84,9 +84,9 @@ the corrupt nodes, the few remaining replicas can not reach an agreement with on
 "reset" command will be released in next version.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
-				diagnosis     *proto.MetaPartitionDiagnosis
-				metaNodes     []*proto.MetaNodeInfo
-				err           error
+				diagnosis *proto.MetaPartitionDiagnosis
+				metaNodes []*proto.MetaNodeInfo
+				err       error
 			)
 			if diagnosis, err = client.AdminAPI().DiagnoseMetaPartition(); err != nil {
 				stdout("%v\n", err)
@@ -130,7 +130,7 @@ the corrupt nodes, the few remaining replicas can not reach an agreement with on
 			})
 			for _, pid := range diagnosis.LackReplicaMetaPartitionIDs {
 				var partition *proto.MetaPartitionInfo
-				if partition, err = client.ClientAPI().GetMetaPartition( pid); err != nil {
+				if partition, err = client.ClientAPI().GetMetaPartition(pid); err != nil {
 					stdout("Partition not found, err:[%v]", err)
 					return
 				}

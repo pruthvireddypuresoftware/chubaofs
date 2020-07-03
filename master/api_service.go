@@ -650,8 +650,8 @@ func (m *Server) getVolSimpleInfo(w http.ResponseWriter, r *http.Request) {
 
 func newSimpleView(vol *Vol) *proto.SimpleVolView {
 	var (
-		volInodeCount   uint64
-		volDentryCount  uint64
+		volInodeCount  uint64
+		volDentryCount uint64
 	)
 	for _, mp := range vol.MetaPartitions {
 		volDentryCount = volDentryCount + mp.DentryCount

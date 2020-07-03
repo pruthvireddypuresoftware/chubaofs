@@ -64,7 +64,7 @@ func newConfigSetCmd() *cobra.Command {
 	var cmd = &cobra.Command{
 		Use:   CliOpSet,
 		Short: cmdConfigSetShort,
-		Long: `Set the config file`,
+		Long:  `Set the config file`,
 		Run: func(cmd *cobra.Command, args []string) {
 			var (
 				masterHosts []string

@@ -56,7 +56,7 @@ then execute the following command:
 		Example: "cfs-cli completion",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := cfsRootCmd.CFSCmd.GenBashCompletionFile("cfs-cli.sh"); err != nil {
-				_, _ = fmt.Fprintf(os.Stdout,"generate bash file failed")
+				_, _ = fmt.Fprintf(os.Stdout, "generate bash file failed")
 			}
 			_, _ = fmt.Fprintf(os.Stdout, `File "cfs-cli.sh" has been generated successfully under the present working directory,
 following command to execute:

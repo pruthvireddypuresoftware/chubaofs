@@ -21,14 +21,14 @@ import (
 	"github.com/chubaofs/chubaofs/proto"
 	"github.com/chubaofs/chubaofs/util/errors"
 	"github.com/chubaofs/chubaofs/util/log"
+	"math"
 	"strings"
 	"time"
-	"math"
 )
 
 // MetaReplica defines the replica of a meta partition
 type MetaReplica struct {
-	Addr       string
+	Addr        string
 	start       uint64 // lower bound of the inode id
 	end         uint64 // upper bound of the inode id
 	nodeID      uint64

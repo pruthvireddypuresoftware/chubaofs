@@ -258,7 +258,7 @@ func (mp *metaPartition) syncToRaftFollowersFreeInode(hasDeleteInodes []byte) (e
 }
 
 func (mp *metaPartition) notifyRaftFollowerToFreeInodes(wg *sync.WaitGroup, target string, hasDeleteInodes []byte) (err error) {
-	var conn *net.TCPConn
+	var conn net.Conn
 	conn, err = mp.config.ConnPool.GetConnect(target)
 	defer func() {
 		wg.Done()

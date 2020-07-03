@@ -188,7 +188,7 @@ func (c *MasterClient) httpRequest(method, url string, param, header map[string]
 		if isTimeOut {
 			client.Timeout = requestTimeout
 		}
-	}else {
+	} else {
 		client.Timeout = requestTimeout
 	}
 	var req *http.Request

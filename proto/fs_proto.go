@@ -425,7 +425,7 @@ type MultipartInfo struct {
 	Path     string               `json:"path"`
 	InitTime time.Time            `json:"itime"`
 	Parts    []*MultipartPartInfo `json:"parts"`
-	Extend   map[string]string	  `json:"extend"`
+	Extend   map[string]string    `json:"extend"`
 }
 
 type MultipartPartInfo struct {
@@ -461,7 +461,7 @@ type GetMultipartResponse struct {
 type AddMultipartPartRequest struct {
 	VolName     string             `json:"vol"`
 	PartitionId uint64             `json:"pid"`
-	Path		string			   `json:"path"`
+	Path        string             `json:"path"`
 	MultipartId string             `json:"mid"`
 	Part        *MultipartPartInfo `json:"part"`
 }
