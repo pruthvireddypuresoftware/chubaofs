@@ -19,8 +19,9 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-
+	bytes2 "github.com/chubaofs/chubaofs/util/bytes"
 	"github.com/chubaofs/chubaofs/util/btree"
+	"github.com/chubaofs/chubaofs/util/encoding"
 )
 
 var (
@@ -82,6 +83,31 @@ func (k *ExtentKey) MarshalBinary() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+
+// MarshalBinary marshals the binary format of the extent key.
+func (k *ExtentKey) MarshalBinaryWithBuffer(buf *bytes2.Buffer) (error) {
+	if err := encoding.Write(buf, binary.BigEndian, k.FileOffset); err != nil {
+		return err
+	}
+	if err := encoding.Write(buf, binary.BigEndian, k.PartitionId); err != nil {
+		return  err
+	}
+	if err := encoding.Write(buf, binary.BigEndian, k.ExtentId); err != nil {
+		return err
+	}
+	if err := encoding.Write(buf, binary.BigEndian, k.ExtentOffset); err != nil {
+		return err
+	}
+	if err := encoding.Write(buf, binary.BigEndian, k.Size); err != nil {
+		return  err
+	}
+	if err := encoding.Write(buf, binary.BigEndian, k.CRC); err != nil {
+		return err
+	}
+	return nil
+}
+
+
 // UnmarshalBinary unmarshals the binary format of the extent key.
 func (k *ExtentKey) UnmarshalBinary(buf *bytes.Buffer) (err error) {
 	if err = binary.Read(buf, binary.BigEndian, &k.FileOffset); err != nil {
@@ -104,6 +130,39 @@ func (k *ExtentKey) UnmarshalBinary(buf *bytes.Buffer) (err error) {
 	}
 	return
 }
+
+// UnmarshalBinary unmarshals the binary format of the extent key.
+func (k *ExtentKey) UnmarshalBinaryWithBuffer(buf *bytes2.Buffer) (hasRead int,err error) {
+	var (
+		readN int
+	)
+	if readN,err = encoding.Read(buf, binary.BigEndian, &k.FileOffset); err != nil {
+		return
+	}
+	hasRead+=readN
+	if readN,err = encoding.Read(buf, binary.BigEndian, &k.PartitionId); err != nil {
+		return
+	}
+	hasRead+=readN
+	if readN,err = encoding.Read(buf, binary.BigEndian, &k.ExtentId); err != nil {
+		return
+	}
+	hasRead+=readN
+	if readN,err = encoding.Read(buf, binary.BigEndian, &k.ExtentOffset); err != nil {
+		return
+	}
+	hasRead+=readN
+	if readN,err = encoding.Read(buf, binary.BigEndian, &k.Size); err != nil {
+		return
+	}
+	hasRead+=readN
+	if readN,err = encoding.Read(buf, binary.BigEndian, &k.CRC); err != nil {
+		return
+	}
+	hasRead+=readN
+	return
+}
+
 
 // TODO remove
 func (k *ExtentKey) UnMarshal(m string) (err error) {

@@ -19,6 +19,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"github.com/chubaofs/chubaofs/util/bytes"
 	"hash/crc32"
 	"io"
 	"io/ioutil"
@@ -131,7 +132,8 @@ func (mp *metaPartition) loadInode(rootDir string) (err error) {
 			return
 		}
 		ino := NewInode(0, 0)
-		if err = ino.Unmarshal(inoBuf); err != nil {
+		buff:=bytes.NewBufferWithData(inoBuf)
+		if err = ino.UnmarshalWithBuffer(buff); err != nil {
 			err = errors.NewErrorf("[loadInode] Unmarshal: %s", err.Error())
 			return
 		}
@@ -198,7 +200,8 @@ func (mp *metaPartition) loadDentry(rootDir string) (err error) {
 			return
 		}
 		dentry := &Dentry{}
-		if err = dentry.Unmarshal(dentryBuf); err != nil {
+		buff:=bytes.NewBufferWithData(dentryBuf)
+		if err = dentry.UnmarshalWithBuffer(buff); err != nil {
 			err = errors.NewErrorf("[loadDentry] Unmarshal: %s", err.Error())
 			return
 		}
@@ -405,10 +408,11 @@ func (mp *metaPartition) storeInode(rootDir string,
 	sign := crc32.NewIEEE()
 	sm.inodeTree.Ascend(func(i BtreeItem) bool {
 		ino := i.(*Inode)
-		if data, err = ino.Marshal(); err != nil {
+		buff:=bytes.GetCommonBytesBuffer()
+		if err = ino.MarshalWithBuffer(buff); err != nil {
 			return false
 		}
-		// set length
+		data=buff.GetData()
 		binary.BigEndian.PutUint32(lenBuf, uint32(len(data)))
 		if _, err = fp.Write(lenBuf); err != nil {
 			return false
@@ -423,6 +427,7 @@ func (mp *metaPartition) storeInode(rootDir string,
 		if _, err = sign.Write(data); err != nil {
 			return false
 		}
+		bytes.PutCommonBytesBuffer(buff)
 		return true
 	})
 	crc = sign.Sum32()
@@ -449,11 +454,11 @@ func (mp *metaPartition) storeDentry(rootDir string,
 	sign := crc32.NewIEEE()
 	sm.dentryTree.Ascend(func(i BtreeItem) bool {
 		dentry := i.(*Dentry)
-		data, err = dentry.Marshal()
-		if err != nil {
+		buff:=bytes.GetCommonBytesBuffer()
+		if err = dentry.MarshalWithBuffer(buff);err != nil {
 			return false
 		}
-		// set length
+		data=buff.GetData()
 		binary.BigEndian.PutUint32(lenBuf, uint32(len(data)))
 		if _, err = fp.Write(lenBuf); err != nil {
 			return false
@@ -467,6 +472,7 @@ func (mp *metaPartition) storeDentry(rootDir string,
 		if _, err = sign.Write(data); err != nil {
 			return false
 		}
+		bytes.PutCommonBytesBuffer(buff)
 		return true
 	})
 	crc = sign.Sum32()

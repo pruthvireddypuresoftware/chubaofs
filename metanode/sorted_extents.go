@@ -61,6 +61,8 @@ func (se *SortedExtents) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
+
+
 func (se *SortedExtents) Append(ek proto.ExtentKey) (deleteExtents []proto.ExtentKey) {
 	endOffset := ek.FileOffset + uint64(ek.Size)
 
